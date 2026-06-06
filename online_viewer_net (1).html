@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
+  <title>مسابقة مخطط المخاض | Partogramme Quiz</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: linear-gradient(145deg, #f0f4f8 0%, #d9e2ec 100%);
+      font-family: 'Segoe UI', 'Tajawal', 'Cairo', system-ui, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      margin: 0;
+    }
+
+    .quiz-container {
+      width: 100%;
+      max-width: 750px;
+      background: rgba(255, 255, 255, 0.8);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      background: #ffffff;
+      border-radius: 32px;
+      box-shadow: 0 25px 50px -10px rgba(0, 32, 64, 0.25);
+      padding: 25px 22px 30px;
+      border: 1px solid rgba(255, 255, 255, 0.5);
+      transition: all 0.2s ease;
+    }
+
+    h1 {
+      text-align: center;
+      font-size: 2rem;
+      font-weight: 700;
+      color: #0b3b5c;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    h1 span {
+      background: #0b3b5c;
+      color: white;
+      font-size: 1.1rem;
+      padding: 4px 16px;
+      border-radius: 40px;
+    }
+
+    .subtitle {
+      text-align: center;
+      color: #2c3e50;
+      margin-bottom: 25px;
+      font-weight: 500;
+      border-bottom: 2px dashed #bfd8e8;
+      padding-bottom: 12px;
+    }
+
+    .progress-area {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #e9f2fa;
+      border-radius: 50px;
+      padding: 8px 18px;
+      margin-bottom: 20px;
+      font-weight: 600;
+      color: #0a3144;
+    }
+
+    .question-box {
+      background: #f9fcff;
+      border-radius: 24px;
+      padding: 20px;
+      margin-bottom: 18px;
+      border: 1px solid #dceaf5;
+    }
+
+    .q-num {
+      font-size: 0.9rem;
+      color: #3b6e8f;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      margin-bottom: 8px;
+    }
+
+    .question-text {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: #0c1e2b;
+      line-height: 1.5;
+      margin-bottom: 20px;
+    }
+
+    .options-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .option-btn {
+      background: white;
+      border: 2px solid #d0dfec;
+      border-radius: 18px;
+      padding: 16px 18px;
+      font-size: 1rem;
+      font-weight: 500;
+      color: #1e3b4f;
+      text-align: right;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      background: #ffffff;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      word-break: break-word;
+    }
+
+    .option-btn:hover:not(:disabled) {
+      border-color: #4989b4;
+      background: #f0f7fe;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 14px rgba(20, 80, 120, 0.1);
+    }
+
+    .option-btn.correct-highlight {
+      background: #d4edda;
+      border-color: #28a745;
+      color: #0b3b1e;
+      font-weight: 600;
+      box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.3);
+    }
+
+    .option-btn.wrong-highlight {
+      background: #fce4e4;
+      border-color: #dc3545;
+      color: #721c24;
+      font-weight: 600;
+      box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.25);
+    }
+
+    .option-btn:disabled {
+      cursor: default;
+      opacity: 0.9;
+    }
+
+    .letter-prefix {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: #e5eff7;
+      color: #0b3b5c;
+      font-weight: 700;
+      width: 32px;
+      height: 32px;
+      border-radius: 10px;
+      font-size: 0.9rem;
+      flex-shrink: 0;
+    }
+
+    .nav-buttons {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 25px;
+      gap: 15px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      background: white;
+      border: none;
+      padding: 14px 24px;
+      border-radius: 40px;
+      font-weight: 700;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: 0.2s;
+      background: #eef3f9;
+      color: #1e4056;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      border: 1px solid #cbdbe9;
+    }
+
+    .btn-primary {
+      background: #0b3b5c;
+      color: white;
+      border: none;
+      box-shadow: 0 8px 16px -6px #0b3b5c66;
+    }
+
+    .btn-primary:hover {
+      background: #145277;
+    }
+
+    .btn:active { transform: scale(0.96); }
+    .btn:disabled {
+      opacity: 0.5;
+      pointer-events: none;
+    }
+
+    .result-screen {
+      text-align: center;
+      padding: 20px 10px;
+    }
+
+    .score-circle {
+      width: 140px;
+      height: 140px;
+      background: conic-gradient(#0b3b5c 0deg, #d0dfec 0deg);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 20px auto;
+      box-shadow: 0 15px 25px rgba(0,0,0,0.1);
+    }
+
+    .score-inner {
+      background: white;
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 2.2rem;
+      color: #0b3b5c;
+    }
+
+    .message {
+      font-size: 1.4rem;
+      font-weight: 600;
+      margin: 15px 0;
+    }
+
+    .restart-btn {
+      background: #0b3b5c;
+      color: white;
+      border: none;
+      padding: 14px 32px;
+      border-radius: 30px;
+      font-weight: bold;
+      margin-top: 10px;
+    }
+
+    @media (max-width: 500px) {
+      .quiz-container { padding: 18px; }
+      .question-text { font-size: 1.1rem; }
+    }
+  </style>
+</head>
+<body>
+<div class="quiz-container" id="quizApp">
+  <!-- Dynamic content rendered by JavaScript -->
+</div>
+
+<script>
+  (function() {
+    // ------ قاعدة الأسئلة (كما وردت بالضبط) ------
+    const questions = [
+      {
+        id: 1,
+        text: "ما هو تعريف مخطط المخاض (Partogramme)؟",
+        options: [
+          "رسم تخطيطي لتقييم صحة الجنين فقط.",
+          "رسم تخطيطي يمثل تقدم اتساع عنق الرحم حسب الزمن.",
+          "جدول لتسجيل علامات حيوية الأم فقط.",
+          "خريطة لتحديد موقع المشيمة."
+        ],
+        correct: 1, // index 1 = الخيار الثاني (ب)
+        explanation: ""
+      },
+      {
+        id: 2,
+        text: "ما هي إحدى الأهداف الرئيسية لتخطيط المخاض؟",
+        options: [
+          "تسجيل وزن الجنين عند الولادة.",
+          "إظهار تقدم المخاض ومراقبة حالة الأم والجنين.",
+          "تحديد جنس المولود قبل الولادة.",
+          "حساب كمية السائل الأمنيوسي."
+        ],
+        correct: 1,
+        explanation: ""
+      },
+      {
+        id: 3,
+        text: "في الجزء العلوي من مخطط المخاض، يتم تسجيل:",
+        options: [
+          "العلامات الحيوية للأم (النبض، الضغط، الحرارة).",
+          "اتساع عنق الرحم.",
+          "نزول رأس الجنين.",
+          "مدة كل انقباضة."
+        ],
+        correct: 0,
+        explanation: ""
+      },
+      {
+        id: 4,
+        text: "النقطة الواقعة على الخط العمودي تمثل اتساع عنق الرحم بمقدار:",
+        options: [
+          "5 سم.",
+          "3 سم.",
+          "1 سم.",
+          "10 سم."
+        ],
+        correct: 2, // 1 سم
+        explanation: ""
+      },
+      {
+        id: 5,
+        text: "في المرحلة الكامنة من المخاض، \"فترة تَمَيُّز\" تتميز بـ:",
+        options: [
+          "سرعة عالية في الاتساع والرحمية.",
+          "بطء في الاتساع ومعدلات رحمية متوسطة.",
+          "توقف كامل في الانقباضات.",
+          "اتساع فوري لعنق الرحم."
+        ],
+        correct: 1,
+        explanation: ""
+      },
+      {
+        id: 6,
+        text: "ما هي سرعة اتساع عنق الرحم في المرحلة النشطة الطبيعية عند استخدام مخطط المخاض؟",
+        options: [
+          "أقل من 0.5 سم/ساعة.",
+          "1 سم/ساعة على الأقل.",
+          "5 سم/ساعة.",
+          "10 سم/ساعة."
+        ],
+        correct: 1,
+        explanation: ""
+      },
+      {
+        id: 7,
+        text: "يتم تحديد السرعة المتوسطة للاتساع في المرحلة النشطة بحسب المخطط بحوالي:",
+        options: [
+          "1-2 سم/ساعة.",
+          "3-5 سم/ساعة.",
+          "10-15 سم/ساعة.",
+          "20-25 سم/ساعة."
+        ],
+        correct: 2, // 10-15 سم/ساعة حسب الإجابات المعطاة
+        explanation: ""
+      },
+      {
+        id: 8,
+        text: "عندما يكون معدل الاتساع أكثر من 1 سم/ساعة ولكن في المخاض المتأخر (أكثر من 4 ساعات)، فإن هذا يمثل:",
+        options: [
+          "مخاض سريع جداً.",
+          "حالة طبيعية.",
+          "سرعة متوسطة للنشاط.",
+          "بطء في المخاض."
+        ],
+        correct: 2,
+        explanation: ""
+      },
+      {
+        id: 9,
+        text: "يوجد في المرحلة النشطة نوعان من الخطوط للمساعدة في التقييم هما:",
+        options: [
+          "خط التوقف وخط التسارع.",
+          "خط التنبيه (Alert) وخط الإنذار (Action).",
+          "خط الجنين وخط المشيمة.",
+          "خط النبض وخط التنفس."
+        ],
+        correct: 1,
+        explanation: ""
+      },
+      {
+        id: 10,
+        text: "يفصل خط الإنذار (Action line) عن خط التنبيه (Alert line) مسافة زمنية مقدارها:",
+        options: [
+          "ساعة واحدة.",
+          "ساعتان.",
+          "4 ساعات.",
+          "6 ساعات."
+        ],
+        correct: 2,
+        explanation: ""
+      },
+      {
+        id: 11,
+        text: "عند استخدام مخطط المخاض، تُوضع العلامات على خط التنبيه (Alert line) وفقاً لـ:",
+        options: [
+          "تقدم نزول رأس الجنين.",
+          "تغير ضغط الدم.",
+          "تغير نبض الجنين.",
+          "حساب مدة المخاض الكلية."
+        ],
+        correct: 0,
+        explanation: ""
+      },
+      {
+        id: 12,
+        text: "الخط الأفقي الذي يمثل التوقف والخط العمودي الذي يمثل التمثيل البياني في طريقة الرسم يعنيان:",
+        options: [
+          "نهاية عملية الولادة.",
+          "بداية تسجيل حالات التأخر/الانتظار.",
+          "البدء في إعطاء الأدوية.",
+          "حالة الطوارئ القصوى."
+        ],
+        correct: 1,
+        explanation: ""
+      },
+      {
+        id: 13,
+        text: "المرحلة النشطة من المخاض تبدأ عند اتساع عنق الرحم وتتميز بـ:",
+        options: [
+          "سرعة بطيئة جداً.",
+          "تنفس منتظم وسريع للأم فقط.",
+          "تنفسات رحمية منتظمة وسريعة واتساع في عنق الرحم.",
+          "عدم وجود اتساع لعنق الرحم."
+        ],
+        correct: 2,
+        explanation: ""
+      },
+      {
+        id: 14,
+        text: "تشمل التدوينات المسجلة على الورقة في الأماكن المخصصة (اختر الإجابة الصحيحة):",
+        options: [
+          "الغسيل الكلوي.",
+          "فحوصات السكر التراكمي فقط.",
+          "الضغط - النبض - درجة حرارة الجسم - كمية البول - ساعات الولادة.",
+          "تحاليل الدم الكاملة فقط."
+        ],
+        correct: 2,
+        explanation: ""
+      },
+      {
+        id: 15,
+        text: "\"مخطط المخاض هو رسم تخطيطي يمثل تقدم اتساع عنق الرحم حسب الزمن وتسجيل المحطات الرئيسية من حالة الأم والجنين\". هذه العبارة هي:",
+        options: [
+          "تعريف صحيح.",
+          "تعريف خاطئ.",
+          "هدف من أهداف المخطط.",
+          "طريقة رسم خط الإنذار."
+        ],
+        correct: 0,
+        explanation: ""
+      }
+    ];
+
+    // حالة التطبيق
+    const TOTAL = questions.length;
+    let currentIndex = 0;               // 0-based
+    let userAnswers = new Array(TOTAL).fill(null); // null or selected option index
+    let quizFinished = false;
+
+    // عناصر DOM الرئيسية
+    const appContainer = document.getElementById("quizApp");
+
+    // ---- دوال مساعدة ----
+    function render() {
+      if (quizFinished) {
+        renderResultScreen();
+        return;
+      }
+
+      const q = questions[currentIndex];
+      const selectedOption = userAnswers[currentIndex]; // قد يكون null
+
+      const progressPercent = ((currentIndex) / TOTAL) * 100;
+      const questionNumber = currentIndex + 1;
+
+      const html = `
+        <div>
+          <h1>📋 مخطط المخاض <span>Partogramme</span></h1>
+          <div class="subtitle">اختبر معلوماتك الطبية</div>
+          
+          <div class="progress-area">
+            <span>السؤال ${questionNumber} من ${TOTAL}</span>
+            <span>${Math.round(progressPercent)}% مكتمل</span>
+          </div>
+          
+          <div class="question-box">
+            <div class="q-num">سؤال ${questionNumber}</div>
+            <div class="question-text">${q.text}</div>
+            <div class="options-grid" id="optionsContainer">
+              ${q.options.map((opt, idx) => {
+                let btnClass = "option-btn";
+                // إظهار التظليل فقط إذا تمت الإجابة على هذا السؤال
+                if (selectedOption !== null) {
+                  if (idx === q.correct) {
+                    btnClass += " correct-highlight";
+                  } else if (idx === selectedOption && idx !== q.correct) {
+                    btnClass += " wrong-highlight";
+                  }
+                }
+                const disabledAttr = (selectedOption !== null) ? "disabled" : "";
+                const letter = String.fromCharCode(1571 + idx); // أ ب ج د (تقريبا أبجدية عربية)
+                // نستخدم أحرف عربية واضحة: أ, ب, ج, د
+                const arabicLetters = ["أ", "ب", "ج", "د"];
+                return `
+                  <button class="${btnClass}" data-option-index="${idx}" ${disabledAttr}>
+                    <span class="letter-prefix">${arabicLetters[idx]}</span>
+                    <span>${opt}</span>
+                  </button>
+                `;
+              }).join('')}
+            </div>
+          </div>
+          
+          <div class="nav-buttons">
+            <button class="btn" id="prevBtn" ${currentIndex === 0 ? 'disabled' : ''}>⬅️ السابق</button>
+            ${currentIndex === TOTAL-1 ? 
+              '<button class="btn btn-primary" id="finishBtn">✅ إنهاء المسابقة</button>' : 
+              '<button class="btn btn-primary" id="nextBtn">التالي ➡️</button>'
+            }
+          </div>
+          <div style="text-align: center; margin-top: 10px; color: #3b5e7a; font-size:0.9rem;">
+            ${selectedOption !== null ? 'تم تسجيل إجابتك' : 'اختر إجابة'}
+          </div>
+        </div>
+      `;
+
+      appContainer.innerHTML = html;
+
+      // إضافة المستمعين للأزرار
+      const optionsBtns = document.querySelectorAll(".option-btn");
+      optionsBtns.forEach(btn => {
+        btn.addEventListener("click", optionClickHandler);
+      });
+
+      document.getElementById("prevBtn")?.addEventListener("click", goToPrev);
+      document.getElementById("nextBtn")?.addEventListener("click", goToNext);
+      document.getElementById("finishBtn")?.addEventListener("click", finishQuiz);
+    }
+
+    function optionClickHandler(e) {
+      const button = e.currentTarget;
+      const optionIndex = parseInt(button.getAttribute("data-option-index"), 10);
+      if (isNaN(optionIndex)) return;
+      
+      // تسجيل الإجابة للسؤال الحالي
+      userAnswers[currentIndex] = optionIndex;
+      
+      // إعادة رسم السؤال الحالي لإظهار التظليل
+      render();
+    }
+
+    function goToPrev() {
+      if (currentIndex > 0) {
+        currentIndex--;
+        render();
+      }
+    }
+
+    function goToNext() {
+      if (currentIndex < TOTAL - 1) {
+        currentIndex++;
+        render();
+      }
+    }
+
+    function finishQuiz() {
+      // التأكد من الإجابة على السؤال الأخير إذا لم يجب عليه (يمكن إنهاء حتى لو ترك فارغاً)
+      // لكن نحسب النتيجة بناءً على الإجابات المخزنة
+      quizFinished = true;
+      render();
+    }
+
+    function calculateScore() {
+      let correctCount = 0;
+      for (let i = 0; i < TOTAL; i++) {
+        if (userAnswers[i] === questions[i].correct) {
+          correctCount++;
+        }
+      }
+      return correctCount;
+    }
+
+    function getPerformanceMessage(score, total) {
+      const percent = (score / total) * 100;
+      if (percent === 100) return "🌟 ممتاز! أداء رائع وإتقان كامل.";
+      if (percent >= 80) return "👏 جيد جداً! معرفة قوية بمخطط المخاض.";
+      if (percent >= 60) return "📘 جيد، واصل المراجعة لتحسين النتيجة.";
+      if (percent >= 40) return "📚 لا بأس، تحتاج إلى مزيد من التركيز على المفاهيم.";
+      return "💡 يُنصح بمراجعة مخطط المخاض بعناية والمحاولة مرة أخرى.";
+    }
+
+    function renderResultScreen() {
+      const score = calculateScore();
+      const percent = (score / TOTAL) * 100;
+      const angle = (score / TOTAL) * 360;
+      const message = getPerformanceMessage(score, TOTAL);
+      
+      // إعداد نجمات أو تشجيع
+      let stars = '';
+      if (percent >= 90) stars = '⭐⭐⭐⭐⭐';
+      else if (percent >= 70) stars = '⭐⭐⭐⭐';
+      else if (percent >= 50) stars = '⭐⭐⭐';
+      else stars = '⭐';
+
+      const html = `
+        <div class="result-screen">
+          <h1>🎉 انتهت المسابقة</h1>
+          <div class="score-circle" style="background: conic-gradient(#0b3b5c ${angle}deg, #e0eaf2 ${angle}deg);">
+            <div class="score-inner">
+              <span>${score}/${TOTAL}</span>
+              <small style="font-size:0.9rem;">${Math.round(percent)}%</small>
+            </div>
+          </div>
+          <div class="message">${stars} ${message}</div>
+          <p style="color:#2c3e50; margin:10px 0;">أجبت على ${score} من أصل ${TOTAL} أسئلة بشكل صحيح.</p>
+          <button class="restart-btn" id="restartQuizBtn">🔄 أعد المحاولة</button>
+        </div>
+      `;
+      appContainer.innerHTML = html;
+      document.getElementById("restartQuizBtn").addEventListener("click", restartQuiz);
+    }
+
+    function restartQuiz() {
+      // إعادة تعيين الحالة
+      currentIndex = 0;
+      userAnswers = new Array(TOTAL).fill(null);
+      quizFinished = false;
+      render();
+    }
+
+    // بدء التطبيق
+    render();
+  })();
+</script>
+</body>
+</html>
